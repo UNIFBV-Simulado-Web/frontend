@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Button from "../button";
 import { useState } from "react";
+import { Container, ErrorMessage, Options } from "./styles";
 
 interface QuestionProps {
   question: QuestionAPI;
@@ -48,23 +49,14 @@ export default function Question({
   };
 
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
+    <Container>
       {question?.files.map((file) => (
         <Image key={file} src={file} alt="Question" width={500} height={500} />
       ))}
 
       <p>{question?.context}</p>
       <p>{question?.alternativesIntroduction}</p>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <Options>
         {question?.alternatives.map((alternative) => (
           <Button
             style={{
@@ -82,14 +74,14 @@ export default function Question({
             {alternative.text}
           </Button>
         ))}
-      </div>
-      {error && <p style={{ color: "red" }}>Selecione uma alternativa</p>}
+      </Options>
+      {error && <ErrorMessage>Selecione uma alternativa</ErrorMessage>}
       <Button
         onClick={handleSubmit}
         style={{ backgroundColor: "oklch(0.769 0.188 70.08)" }}
       >
         {isSubmited ? "Próxima Questão" : "Enviar"}
       </Button>
-    </div>
+    </Container>
   );
 }
