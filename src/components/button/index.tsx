@@ -17,7 +17,7 @@ export default function Button({
   return (
     <button
       onClick={props.onClick}
-      className={`rounded-md bg-indigo-600 px-40 py-4 text-md font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+      className={`rounded-md transparent outline-2 px-40 py-4 text-md font-Inter text-white shadow-md shadow-amber-50 hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600; ${
         error && "outline-2 outline-offset-2 outline-solid outline-red-500"
       } `}
       style={style}
