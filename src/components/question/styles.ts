@@ -18,13 +18,3 @@ export const Options = styled.div`
 export const ErrorMessage = styled.p`
   color: red;
 `;
-
-export const QuestionT = styled.div`
-background-color: rgb(255 255 255 / 60%);
-color: black;
-font-weight: bold;
-padding: 20px 25px;
-margin-top: 50px;
-width: 100%;
-box-sizing: border-box;
-`;

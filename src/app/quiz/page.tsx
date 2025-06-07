@@ -30,8 +30,20 @@ export default function Quiz() {
   }, []);
 
   return (
-    <Fundo>
-        <Line>
+    <div className="relative
+      min-h-screen
+      w-full
+      bg-[#0C222A]
+      before:absolute
+      before:inset-0
+      before:bg-[radial-gradient(circle_500px_at_top_left,_rgba(22,78,99,0.5),_transparent_80%)]
+      after:absolute
+      after:inset-0
+      after:bg-[radial-gradient(circle_500px_at_bottom_right,_rgba(22,78,99,0.5),_transparent_80%)]">
+      <header className="w-full max-w-4xl flex justify-between items-center w-full p-4 sm:p-6 lg:p-8 font-sans">
+        <h1 className="text-2xl font-bold">Quiz Aprende+</h1>
+      </header>
+      
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -48,7 +60,6 @@ export default function Quiz() {
           )}
         </>
       )}
-        </Line>
-    </Fundo>
+    </div>
   );
 }
