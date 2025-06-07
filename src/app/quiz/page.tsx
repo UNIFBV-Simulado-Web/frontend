@@ -2,7 +2,8 @@
 
 import Question from "@/components/question";
 import { useEffect, useState } from "react";
-import { Fundo } from './styles';
+import { Fundo, Line } from './styles';
+
 
 export default function Quiz() {
   const [loading, setLoading] = useState(true);
@@ -30,6 +31,7 @@ export default function Quiz() {
 
   return (
     <Fundo>
+        <Line>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -46,6 +48,7 @@ export default function Quiz() {
           )}
         </>
       )}
+        </Line>
     </Fundo>
   );
 }

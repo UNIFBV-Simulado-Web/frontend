@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Button from "../button";
 import { useState } from "react";
-import { Container, ErrorMessage, Header, Options, QuestionT } from './styles';
+import { Container, ErrorMessage, Options, QuestionT } from './styles';
 
 interface QuestionProps {
   question: QuestionAPI;
@@ -49,7 +49,6 @@ export default function Question({
   };
 
   return (
-    <Header>
     <Container>
       {question?.files.map((file) => (
         <Image key={file} src={file} alt="Question" width={500} height={500} />
@@ -86,6 +85,5 @@ export default function Question({
         {isSubmited ? "Próxima Questão" : "Enviar"}
       </Button>
     </Container>
-    </Header>
   );
 }
