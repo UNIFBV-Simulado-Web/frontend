@@ -72,6 +72,15 @@ export default function Quiz() {
           )}
         </div>
       )}
+      <footer className="w-full absolute inset-x-0 bottom-0 py-6 text-center">
+        <p className="text-sm text-gray-400">
+        <span>© 2025 Quiz Aprende+</span>
+        <span className="mx-2">|</span>
+        <span>Projeto acadêmico-extensivo</span>
+        <span className="mx-2">|</span>
+        <span>Wyden-UniFBV</span>
+      </p>
+      </footer>
       </div>
   );
 }
