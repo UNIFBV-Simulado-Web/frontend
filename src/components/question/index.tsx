@@ -51,13 +51,13 @@ export default function Question({ question, onSubmit }: QuestionProps) {
 
   return (
     <Container>
-      {question?.files.map((file) => (
-        <Image key={file} src={file} alt="Question" width={500} height={500} className="mb-4" />
-      ))}
       <div className="text-black font-semibold font-sans p-6 mb-6 leading-relaxed bg-white/50">
         <p>{question?.context}</p>
         <p className="mt-4">{question?.alternativesIntroduction}</p>
       </div>
+      {question?.files.map((file) => (
+        <Image key={file} src={file} alt="Question" width={500} height={500} className="mb-4" />
+      ))}
       <div className="flex flex-col space-y-3 w-full max-w-4xl">
         {question?.alternatives.map((alternative) => {
           const isCorrect = isSubmited && question.correctAlternative === alternative.letter;

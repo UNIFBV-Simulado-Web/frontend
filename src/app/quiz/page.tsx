@@ -59,7 +59,7 @@ export default function Quiz() {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <div className="relative w-full z-10">
+        <div className="relative w-full z-10 flex-grow">
           {questions.length === 0 ? (
             <p>No questions found</p>
           ) : (
@@ -72,7 +72,7 @@ export default function Quiz() {
           )}
         </div>
       )}
-      <footer className="relative z-20 w-full transparent py-6 text-center">
+      <footer className="w-full py-6 text-center">
         <p className="text-sm text-gray-400">
         <span>© 2025 Quiz Aprende+</span>
         <span className="mx-2">|</span>
