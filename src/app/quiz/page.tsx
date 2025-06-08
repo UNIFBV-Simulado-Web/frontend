@@ -2,7 +2,7 @@
 
 import Question from "@/components/question";
 import { useEffect, useState } from "react";
-
+import Link from "next/link";
 
 
 export default function Quiz() {
@@ -40,17 +40,26 @@ export default function Quiz() {
       before:bg-[radial-gradient(circle_500px_at_top_left,_rgba(22,78,99,0.5),_transparent_80%)]
       after:absolute
       after:inset-0
-      after:bg-[radial-gradient(circle_500px_at_bottom_right,_rgba(22,78,99,0.5),_transparent_80%)]">
+      after:bg-[radial-gradient(circle_500px_at_bottom_right,_rgba(22,78,99,0.5),_transparent_80%)]
+      flex flex-col items-center">
 
-      <header className="max-w-4xl flex justify-between items-center w-full p-4 sm:p-6 lg:p-8 font-sans">
+      <header className="w-full p-4 sm:p-6 lg:p-8 font-sans">
+        <div className="w-full flex justify-between items-center">
         <h1 className="text-2xl font-bold">Quiz Aprende+</h1>
+        <nav>
+          <div className="flex items-center gap-x-6">
+            <Link href="/" className="font-sans font-medium text-white hover:text-gray-900">Menu</Link>
+            <Link href="#" className="font-sans font-medium text-white hover:text-gray-900">Login</Link>
+            <Link href="#" className="rounded-md border transparent px-4 py-2 font-semibold text-white shadow-sm hover:bg-gray-700 transition-colors">Cadastre-se</Link>
+          </div>
+        </nav>
+      </div>
       </header>
-      
-      
+      <div className="w-11/12 h-px bg-white/50 mb-8"></div>
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <div className="relative z-10 w-full max-w-4xl px-4">
+        <div className="relative w-full z-10">
           {questions.length === 0 ? (
             <p>No questions found</p>
           ) : (
