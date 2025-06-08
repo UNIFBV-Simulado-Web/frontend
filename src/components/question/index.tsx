@@ -96,9 +96,7 @@ export default function Question({ question, onSubmit }: QuestionProps) {
       </Button>
       <button
           type="button"
-          className="h-16 w-16 rounded-full bg-gray-200 text-black font-semibold flex items-center justify-center shadow-lg">
-          ChatBot
-        </button>
+          className="h-16 w-16 rounded-full bg-gray-200 text-black font-semibold flex items-center justify-center shadow-lg">ChatBot</button>
       </div>
     </Container>
   );
