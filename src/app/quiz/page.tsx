@@ -2,7 +2,7 @@
 
 import Question from "@/components/question";
 import { useEffect, useState } from "react";
-import { Fundo, Line } from './styles';
+
 
 
 export default function Quiz() {
@@ -29,6 +29,7 @@ export default function Quiz() {
     getQuestions();
   }, []);
 
+
   return (
     <div className="relative
       min-h-screen
@@ -40,14 +41,16 @@ export default function Quiz() {
       after:absolute
       after:inset-0
       after:bg-[radial-gradient(circle_500px_at_bottom_right,_rgba(22,78,99,0.5),_transparent_80%)]">
-      <header className="w-full max-w-4xl flex justify-between items-center w-full p-4 sm:p-6 lg:p-8 font-sans">
+
+      <header className="max-w-4xl flex justify-between items-center w-full p-4 sm:p-6 lg:p-8 font-sans">
         <h1 className="text-2xl font-bold">Quiz Aprende+</h1>
       </header>
+      
       
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <>
+        <div className="relative z-10 w-full max-w-4xl px-4">
           {questions.length === 0 ? (
             <p>No questions found</p>
           ) : (
@@ -58,8 +61,8 @@ export default function Quiz() {
               }}
             />
           )}
-        </>
+        </div>
       )}
-    </div>
+      </div>
   );
 }
