@@ -1,7 +1,25 @@
 import Image from "next/image";
 import Button from "../button";
 import { useState } from "react";
-import { Container, ErrorMessage, Options } from './styles';
+import { Container, ErrorMessage } from './styles';
+
+const CorrectIcon = () => (
+    <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '50%',
+        backgroundColor: 'green',
+        height: '24px',
+        width: '24px',
+        marginRight: '12px',
+        flexShrink: 0
+    }}>
+        <svg style={{ height: '16px', width: '16px', color: 'white' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+        </svg>
+    </div>
+);
 
 interface QuestionProps {
   question: QuestionAPI;
