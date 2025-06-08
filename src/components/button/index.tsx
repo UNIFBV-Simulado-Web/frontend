@@ -1,27 +1,28 @@
-import Link from "next/link";
-import { CSSProperties } from "react";
+import { ReactNode } from "react";
+import clsx from "clsx";
 
 interface ButtonProps {
-  children: React.ReactNode;
+  children: ReactNode;
   onClick?: () => void;
-  style?: CSSProperties | undefined;
-  error?: boolean;
+  disabled?: boolean;
+  className?: string;
 }
 
 export default function Button({
   children,
-  style,
-  error,
-  ...props
+  disabled,
+  onClick,
+  className,
 }: ButtonProps) {
+
   return (
     <button
-      onClick={props.onClick}
-      className={`rounded-md transparent outline-2 px-40 py-4 text-md font-Inter text-white shadow-md shadow-amber-50 hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600; ${
-        error && "outline-2 outline-offset-2 outline-solid outline-red-500"
-      } `}
-      style={style}
-      {...props}
+      onClick={onClick}
+      disabled={disabled}
+      className={clsx(
+        "rounded-lg font-semibold transition-colors duration-200",
+        className
+      )}
     >
       {children}
     </button>
