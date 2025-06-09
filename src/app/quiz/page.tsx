@@ -4,7 +4,7 @@ import Question from "@/components/question";
 import { QuestionType, useQuizStore } from "@/store/quizStore";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 const Quiz: React.FC = () => {
   const searchParams = useSearchParams();
@@ -69,17 +69,17 @@ const Quiz: React.FC = () => {
         </div>
       </header>
       <div className="w-11/12 h-px bg-white/50 mb-8"></div>
-      {quizStatus === "loading" ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="relative w-full z-10 flex-grow">
-          {questions.length === 0 ? (
-            <p>No questions found</p>
-          ) : (
+
+      <div className="relative w-full z-10 flex-grow">
+        {questions.length === 0 ? (
+          <p>Nenhuma questão encontrada</p>
+        ) : (
+          <Suspense fallback={<div>A preparar o seu quiz...</div>}>
             <Question question={getCurrentQuestion() as QuestionType} />
-          )}
-        </div>
-      )}
+          </Suspense>
+        )}
+      </div>
+
       <footer className="w-full py-6 text-center">
         <p className="text-sm text-gray-400">
           <span>© 2025 Quiz Aprende+</span>
