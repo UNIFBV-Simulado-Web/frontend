@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Button from "../button";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import { Container, ErrorMessage, Options } from "./styles";
 import { QuestionType, useQuizStore } from "@/store/quizStore";
@@ -96,88 +96,90 @@ export default function Question({
   };
 
   return (
-    <Container>
-      <div className="text-black font-semibold font-sans p-6 mb-6 leading-relaxed bg-white/50">
-        <p>{question?.context}</p>
-        <p className="mt-4">{question?.introduction}</p>
-      </div>
-      {question?.files?.map((file) => (
-        <Image
-          key={file.id}
-          src={file.link}
-          alt="Question"
-          width={500}
-          height={500}
-          className="mb-4"
-        />
-      ))}
-      <div className="flex flex-col space-y-3 w-full max-w-4xl">
-        {question?.alternatives.map((alternative) => {
-          const isCorrect =
-            isSubmited && question.correct_alternative === alternative.letter;
-          const isFalse =
-            isSubmited &&
-            selectedAlternative === alternative.letter &&
-            !isCorrect;
-          const isSelected =
-            !isSubmited && selectedAlternative === alternative.letter;
+    <Suspense fallback={<div>A preparar o seu quiz...</div>}>
+      <Container>
+        <div className="text-black font-semibold font-sans p-6 mb-6 leading-relaxed bg-white/50">
+          <p>{question?.context}</p>
+          <p className="mt-4">{question?.introduction}</p>
+        </div>
+        {question?.files?.map((file) => (
+          <Image
+            key={file.id}
+            src={file.link}
+            alt="Question"
+            width={500}
+            height={500}
+            className="mb-4"
+          />
+        ))}
+        <div className="flex flex-col space-y-3 w-full max-w-4xl">
+          {question?.alternatives.map((alternative) => {
+            const isCorrect =
+              isSubmited && question.correct_alternative === alternative.letter;
+            const isFalse =
+              isSubmited &&
+              selectedAlternative === alternative.letter &&
+              !isCorrect;
+            const isSelected =
+              !isSubmited && selectedAlternative === alternative.letter;
 
-          return (
-            <Button
-              key={alternative.letter}
-              onClick={() =>
-                !isSubmited && setSelectedAlternative(alternative.letter)
-              }
-              disabled={isSubmited}
-              className={clsx(
-                "w-full p-3 text-left flex items-center text-white border",
-                {
-                  "border-slate-600 hover:bg-slate-800 hover:border-slate-500":
-                    !isSelected && !isCorrect && !isFalse,
-                  "bg-slate-900 border-blue-500": isSelected,
-                  "bg-green-500/20 border-green-500": isCorrect,
-                  "bg-red-500/20 border-red-500": isFalse,
+            return (
+              <Button
+                key={alternative.letter}
+                onClick={() =>
+                  !isSubmited && setSelectedAlternative(alternative.letter)
                 }
-              )}
-            >
-              {isCorrect ? (
-                <CorrectIcon />
-              ) : isFalse ? (
-                <FalseIcon />
-              ) : (
-                <LetterIcon letter={alternative.letter} />
-              )}
-              <span className="flex-1">
-                {alternative.text}
-                {alternative.image && (
-                  <Image
-                    src={alternative.image}
-                    alt="Question"
-                    width={90}
-                    height={10}
-                  />
+                disabled={isSubmited}
+                className={clsx(
+                  "w-full p-3 text-left flex items-center text-white border",
+                  {
+                    "border-slate-600 hover:bg-slate-800 hover:border-slate-500":
+                      !isSelected && !isCorrect && !isFalse,
+                    "bg-slate-900 border-blue-500": isSelected,
+                    "bg-green-500/20 border-green-500": isCorrect,
+                    "bg-red-500/20 border-red-500": isFalse,
+                  }
                 )}
-              </span>
-            </Button>
-          );
-        })}
-      </div>
+              >
+                {isCorrect ? (
+                  <CorrectIcon />
+                ) : isFalse ? (
+                  <FalseIcon />
+                ) : (
+                  <LetterIcon letter={alternative.letter} />
+                )}
+                <span className="flex-1">
+                  {alternative.text}
+                  {alternative.image && (
+                    <Image
+                      src={alternative.image}
+                      alt="Question"
+                      width={90}
+                      height={10}
+                    />
+                  )}
+                </span>
+              </Button>
+            );
+          })}
+        </div>
 
-      {error && <ErrorMessage>Selecione uma alternativa</ErrorMessage>}
-      <div className="w-full flex justify-end items-center gap-4 mt-4 pr-10">
-        <Button
-          onClick={handleSubmit}
-          className="px-10 py-3 bg-amber-500 text-white hover:bg-amber-400"
-        >
-          {isSubmited ? "Próxima Questão" : "Enviar"}
-        </Button>
-        <button
-          type="button"
-          className="h-16 w-16 rounded-full bg-gray-200 text-black font-semibold flex items-center justify-center shadow-lg"
-        >
-          ChatBot
-        </button>
-      </div>
-    </Container>
+        {error && <ErrorMessage>Selecione uma alternativa</ErrorMessage>}
+        <div className="w-full flex justify-end items-center gap-4 mt-4 pr-10">
+          <Button
+            onClick={handleSubmit}
+            className="px-10 py-3 bg-amber-500 text-white hover:bg-amber-400"
+          >
+            {isSubmited ? "Próxima Questão" : "Enviar"}
+          </Button>
+          <button
+            type="button"
+            className="h-16 w-16 rounded-full bg-gray-200 text-black font-semibold flex items-center justify-center shadow-lg"
+          >
+            ChatBot
+          </button>
+        </div>
+      </Container>
+    </Suspense>
   );
 }
