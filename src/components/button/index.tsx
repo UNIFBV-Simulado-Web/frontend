@@ -14,7 +14,6 @@ export default function Button({
   onClick,
   className,
 }: ButtonProps) {
-
   return (
     <button
       onClick={onClick}
