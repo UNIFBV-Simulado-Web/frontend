@@ -2,15 +2,16 @@ import Image from "next/image";
 import Button from "../button";
 import { useState } from "react";
 import { Container, ErrorMessage, Options } from "./styles";
+import { QuestionType, useQuizStore } from "@/store/quizStore";
 
 interface QuestionProps {
-  question: QuestionAPI;
-  onSubmit: () => void;
+  question: QuestionType;
+  onSubmit?: () => void;
 }
 
 export default function Question({
   question,
-  onSubmit,
+
   ...props
 }: QuestionProps) {
   const [selectedAlternative, setSelectedAlternative] = useState<string | null>(
@@ -18,14 +19,16 @@ export default function Question({
   );
   const [isSubmited, setIsSubmited] = useState(false);
   const [error, setError] = useState(false);
+  const { answerQuestion, questions, currentQuestionIndex, score } =
+    useQuizStore();
 
   const getbackgroundcolor = (letter: string) => {
-    if (isSubmited && question.correctAlternative === letter) {
+    if (isSubmited && question.correct_alternative === letter) {
       return "green";
     } else if (
       isSubmited &&
       selectedAlternative === letter &&
-      selectedAlternative !== question.correctAlternative
+      selectedAlternative !== question.correct_alternative
     ) {
       return "red";
     } else if (selectedAlternative === letter) {
@@ -40,9 +43,9 @@ export default function Question({
     }
     setError(false);
     if (isSubmited) {
+      answerQuestion(question.id, selectedAlternative);
       setIsSubmited(false);
       setSelectedAlternative(null);
-      onSubmit();
       return;
     }
     setIsSubmited(true);
@@ -50,12 +53,19 @@ export default function Question({
 
   return (
     <Container>
-      {question?.files.map((file) => (
-        <Image key={file} src={file} alt="Question" width={500} height={500} />
+      Questão: {currentQuestionIndex + 1}/{questions.length}
+      Pontuação: {score}
+      {question?.files?.map((file) => (
+        <Image
+          key={file.id}
+          src={file.link}
+          alt="Question"
+          width={500}
+          height={500}
+        />
       ))}
-
       <p>{question?.context}</p>
-      <p>{question?.alternativesIntroduction}</p>
+      <p>{question?.introduction}</p>
       <Options>
         {question?.alternatives.map((alternative) => (
           <Button
@@ -71,6 +81,14 @@ export default function Question({
               !isSubmited && setSelectedAlternative(alternative.letter);
             }}
           >
+            {alternative.image && (
+              <Image
+                src={alternative.image}
+                alt="Question"
+                width={90}
+                height={10}
+              />
+            )}
             {alternative.text}
           </Button>
         ))}

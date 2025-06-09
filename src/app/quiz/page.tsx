@@ -1,26 +1,32 @@
 "use client";
 
 import Question from "@/components/question";
+import { QuestionType, useQuizStore } from "@/store/quizStore";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+type SearchPageProps = {
+  searchParams: {
+    quantity?: string | undefined;
+    discipline?: string;
+    language?: string;
+    random?: string;
+  };
+};
+const Quiz = ({}: SearchPageProps) => {
+  const searchParams = useSearchParams();
 
-export default function Quiz() {
-  const [loading, setLoading] = useState(true);
-  const [questions, setQuestions] = useState<QuestionAPI[]>([]);
-  const [count, setCount] = useState(0);
+  const quantity = searchParams.get("quantity");
+  const discipline = searchParams.get("discipline");
+  const isRandom = searchParams.get("random");
+  const { loadAndStartQuiz, questions, quizStatus, getCurrentQuestion } =
+    useQuizStore();
 
   const getQuestions = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        "https://api.enem.dev/v1/exams/2022/questions?limit=50&language=ingles&offset=51"
-      );
-      const data = await response.json();
-      setQuestions(data.questions);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    loadAndStartQuiz(Number(quantity) || 10, {
+      discipline: discipline || undefined,
+
+      random: Boolean(isRandom) || true,
+    });
   };
 
   useEffect(() => {
@@ -29,22 +35,18 @@ export default function Quiz() {
 
   return (
     <div>
-      {loading ? (
+      {quizStatus === "loading" ? (
         <p>Loading...</p>
       ) : (
         <>
-          {questions.length === 0 ? (
+          {questions?.length === 0 ? (
             <p>No questions found</p>
           ) : (
-            <Question
-              question={questions[count]}
-              onSubmit={() => {
-                count !== questions.length ? setCount(count + 1) : setCount(0);
-              }}
-            />
+            <Question question={getCurrentQuestion() as QuestionType} />
           )}
         </>
       )}
     </div>
   );
-}
+};
+export default Quiz;
