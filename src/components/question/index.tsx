@@ -1,7 +1,11 @@
 import Image from "next/image";
 import Button from "../button";
 import { useState } from "react";
-import { Container, ErrorMessage } from "./styles";
+
+import { Container, ErrorMessage, Options } from "./styles";
+import { QuestionType, useQuizStore } from "@/store/quizStore";
+
+
 import clsx from "clsx";
 
 const CorrectIcon = () => (
@@ -24,15 +28,42 @@ const LetterIcon = ({ letter }: { letter: string }) => (
   </div>
 );
 
+
 interface QuestionProps {
-  question: QuestionAPI;
-  onSubmit: () => void;
+  question: QuestionType;
+  onSubmit?: () => void;
 }
 
-export default function Question({ question, onSubmit }: QuestionProps) {
-  const [selectedAlternative, setSelectedAlternative] = useState<string | null>(null);
+
+export default function Question({
+  question,
+
+  ...props
+}: QuestionProps) {
+  const [selectedAlternative, setSelectedAlternative] = useState<string | null>(
+    null
+  );
+
   const [isSubmited, setIsSubmited] = useState(false);
   const [error, setError] = useState(false);
+  const { answerQuestion, questions, currentQuestionIndex, score } =
+    useQuizStore();
+
+
+  const getbackgroundcolor = (letter: string) => {
+    if (isSubmited && question.correct_alternative === letter) {
+      return "green";
+    } else if (
+      isSubmited &&
+      selectedAlternative === letter &&
+      selectedAlternative !== question.correct_alternative
+    ) {
+      return "red";
+    } else if (selectedAlternative === letter) {
+      return "oklch(0.673 0.182 276.935)";
+    }
+  };
+
 
   const handleSubmit = () => {
     if (!selectedAlternative) {
@@ -41,9 +72,9 @@ export default function Question({ question, onSubmit }: QuestionProps) {
     }
     setError(false);
     if (isSubmited) {
+      answerQuestion(question.id, selectedAlternative);
       setIsSubmited(false);
       setSelectedAlternative(null);
-      onSubmit();
       return;
     }
     setIsSubmited(true);
@@ -51,6 +82,7 @@ export default function Question({ question, onSubmit }: QuestionProps) {
 
   return (
     <Container>
+
       <div className="text-black font-semibold font-sans p-6 mb-6 leading-relaxed bg-white/50">
         <p>{question?.context}</p>
         <p className="mt-4">{question?.alternativesIntroduction}</p>
@@ -86,6 +118,7 @@ export default function Question({ question, onSubmit }: QuestionProps) {
           );
         })}
       </div>
+
       {error && <ErrorMessage>Selecione uma alternativa</ErrorMessage>}
       <div className="w-full flex justify-end items-center gap-4 mt-4 pr-10">
       <Button
