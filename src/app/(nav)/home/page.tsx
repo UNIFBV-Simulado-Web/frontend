@@ -143,7 +143,7 @@ export default function HomePage() {
 
         <FooterStyled>
           <FooterContent>
-            © {new Date().getFullYear()} Quiz Aprende+ | Projeto académico
+            © {new Date().getFullYear()} Quiz Aprende+ | Projeto acadêmico
             extensivo | Wyden-UniFBV
           </FooterContent>
         </FooterStyled>
