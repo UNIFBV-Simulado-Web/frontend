@@ -70,7 +70,7 @@ export default function QuizComponent() {
         >
           Cancelar Quiz
         </ActionButton>
-        <Question question={currentQuestion as QuestionType} />;
+        <Question question={currentQuestion as QuestionType} />
       </>
     );
   }
