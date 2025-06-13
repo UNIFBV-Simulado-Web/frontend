@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { fetchQuizQuestions, FetchQuizOptions } from "../api/apiService";
 import { useToasterStore } from "./toasterStore";
 import api from "@/api/api";
+import { useAuthStore } from "./authStore";
 
 export interface FileType {
   id: number;
@@ -139,17 +140,22 @@ export const useQuizStore = create<QuizState>((set, get) => ({
     if (nextIndex < get().questions.length) {
       set({ currentQuestionIndex: nextIndex });
     } else {
-      try {
-        await api.post(
-          "https://api.quiz.saggioro.xyz/user-answer",
-          get().userAnswers
-        );
-        set({ quizStatus: "finished" });
-      } catch (e: any) {
-        console.log(e);
-        addToast({ message: e.data.message, type: "error" });
+      const { user } = useAuthStore.getState();
+      if (user) {
+        try {
+          await api.post(
+            "https://api.quiz.saggioro.xyz/user-answer",
+            get().userAnswers
+          );
+          set({ quizStatus: "finished" });
+        } catch (e: any) {
+          console.log(e);
+          addToast({ message: e.data.message, type: "error" });
 
-        set({ errorMessage: "Erro ao salvar questões respondidas" });
+          set({ errorMessage: "Erro ao salvar questões respondidas" });
+        }
+      } else {
+        set({ quizStatus: "finished" });
       }
     }
   },

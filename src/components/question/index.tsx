@@ -82,8 +82,10 @@ export default function Question({
     <Suspense fallback={<div>A preparar o seu quiz...</div>}>
       <Container>
         <div className="text-black font-semibold font-sans p-6 mb-6 leading-relaxed bg-white/50">
-          <p>{question?.context}</p>
-          <p className="mt-4">{question?.introduction}</p>
+          <p style={{ wordBreak: "break-word" }}>{question?.context}</p>
+          <p style={{ wordBreak: "break-word" }} className="mt-4">
+            {question?.introduction}
+          </p>
         </div>
         {question?.files?.map((file) => (
           <Image
