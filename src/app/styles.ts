@@ -75,7 +75,7 @@ export const Nav = styled.nav`
   }
 `;
 
-export const SignUpButton = styled.a`
+export const SignUpButton = styled.button`
   background-color: #facc15;
   color: #0f172a;
   padding: 0.5rem 1rem;
@@ -90,10 +90,8 @@ export const SignUpButton = styled.a`
 
 export const HeroSectionStyled = styled.section`
   padding-top: 4rem;
-  padding-bottom: 4rem;
   @media (min-width: 640px) {
     padding-top: 6rem;
-    padding-bottom: 6rem;
   }
   text-align: center;
 `;

@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { fetchQuizQuestions, FetchQuizOptions } from "../api/apiService";
+import { useToasterStore } from "./toasterStore";
+import api from "@/api/api";
 
 export interface FileType {
   id: number;
@@ -31,11 +33,15 @@ export interface QuestionType {
   alternatives: AlternativeType[];
   files?: FileType[] | null;
 }
+export interface UserAnswers {
+  questionId: number;
+  selectedAlternativeId: number;
+}
 
 interface QuizState {
   questions: QuestionType[];
   currentQuestionIndex: number;
-  userAnswers: Record<number, string>;
+  userAnswers: UserAnswers[];
   score: number;
   quizStatus: "idle" | "loading" | "active" | "finished" | "error";
   currentQuizParams: {
@@ -48,7 +54,7 @@ interface QuizState {
     quantity: number,
     options?: FetchQuizOptions
   ) => Promise<void>;
-  answerQuestion: (questionId: number, selectedLetter: string) => void;
+  answerQuestion: (questionId: number, alternativeId: AlternativeType) => void;
   resetQuiz: () => void;
   getCurrentQuestion: () => QuestionType | null;
 }
@@ -56,7 +62,7 @@ interface QuizState {
 export const useQuizStore = create<QuizState>((set, get) => ({
   questions: [],
   currentQuestionIndex: 0,
-  userAnswers: {},
+  userAnswers: [],
   score: 0,
   quizStatus: "idle",
   currentQuizParams: null,
@@ -67,7 +73,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
       quizStatus: "loading",
       currentQuizParams: { quantity, options },
       score: 0,
-      userAnswers: {},
+      userAnswers: [],
       currentQuestionIndex: 0,
       questions: [],
       errorMessage: null,
@@ -109,28 +115,42 @@ export const useQuizStore = create<QuizState>((set, get) => ({
     }
   },
 
-  answerQuestion: (questionId, selectedLetter) => {
+  answerQuestion: async (questionId, selectedAlternative) => {
+    const { addToast } = useToasterStore.getState();
+
     const currentQuestion = get().questions.find((q) => q.id === questionId);
     if (!currentQuestion || get().quizStatus !== "active") return;
 
     let newScore = get().score;
-    if (selectedLetter === currentQuestion.correct_alternative) {
+    if (selectedAlternative.is_correct) {
       newScore += 1;
     }
 
     set((state) => ({
-      userAnswers: {
+      userAnswers: [
         ...state.userAnswers,
-        [questionId]: selectedLetter,
-      },
+        { questionId, selectedAlternativeId: selectedAlternative.id },
+      ],
+
       score: newScore,
     }));
-
+    console.log(get().userAnswers);
     const nextIndex = get().currentQuestionIndex + 1;
     if (nextIndex < get().questions.length) {
       set({ currentQuestionIndex: nextIndex });
     } else {
-      set({ quizStatus: "finished" });
+      try {
+        await api.post(
+          "https://api.quiz.saggioro.xyz/user-answer",
+          get().userAnswers
+        );
+        set({ quizStatus: "finished" });
+      } catch (e: any) {
+        console.log(e);
+        addToast({ message: e.data.message, type: "error" });
+
+        set({ errorMessage: "Erro ao salvar questões respondidas" });
+      }
     }
   },
 
@@ -150,7 +170,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
     set({
       questions: [],
       currentQuestionIndex: 0,
-      userAnswers: {},
+      userAnswers: [],
       score: 0,
       quizStatus: "idle",
       currentQuizParams: null,

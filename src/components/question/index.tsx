@@ -3,7 +3,7 @@ import Button from "../button";
 import { Suspense, useState } from "react";
 
 import { Container, ErrorMessage, Options } from "./styles";
-import { QuestionType, useQuizStore } from "@/store/quizStore";
+import { AlternativeType, QuestionType, useQuizStore } from "@/store/quizStore";
 
 import clsx from "clsx";
 
@@ -57,28 +57,11 @@ export default function Question({
 
   ...props
 }: QuestionProps) {
-  const [selectedAlternative, setSelectedAlternative] = useState<string | null>(
-    null
-  );
-
+  const [selectedAlternative, setSelectedAlternative] =
+    useState<AlternativeType | null>(null);
   const [isSubmited, setIsSubmited] = useState(false);
   const [error, setError] = useState(false);
-  const { answerQuestion, questions, currentQuestionIndex, score } =
-    useQuizStore();
-
-  const getbackgroundcolor = (letter: string) => {
-    if (isSubmited && question.correct_alternative === letter) {
-      return "green";
-    } else if (
-      isSubmited &&
-      selectedAlternative === letter &&
-      selectedAlternative !== question.correct_alternative
-    ) {
-      return "red";
-    } else if (selectedAlternative === letter) {
-      return "oklch(0.673 0.182 276.935)";
-    }
-  };
+  const { answerQuestion } = useQuizStore();
 
   const handleSubmit = () => {
     if (!selectedAlternative) {
@@ -118,16 +101,16 @@ export default function Question({
               isSubmited && question.correct_alternative === alternative.letter;
             const isFalse =
               isSubmited &&
-              selectedAlternative === alternative.letter &&
+              selectedAlternative?.letter === alternative.letter &&
               !isCorrect;
             const isSelected =
-              !isSubmited && selectedAlternative === alternative.letter;
+              !isSubmited && selectedAlternative?.letter === alternative.letter;
 
             return (
               <Button
                 key={alternative.letter}
                 onClick={() =>
-                  !isSubmited && setSelectedAlternative(alternative.letter)
+                  !isSubmited && setSelectedAlternative(alternative)
                 }
                 disabled={isSubmited}
                 className={clsx(

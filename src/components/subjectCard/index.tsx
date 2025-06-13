@@ -54,7 +54,6 @@ const SubjectCard: React.FC<SubjectCardComponentProps> = ({ subject }) => {
         <CardTitle>{subject.title}</CardTitle>
         <CardDescription>{subject.description}</CardDescription>
       </div>
-      {`/quiz?${getParams()}`}
       <Link href={`/quiz?${getParams()}`}>
         <CardButton>
           Iniciar <ChevronRight />

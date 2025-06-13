@@ -1,9 +1,15 @@
 import { QuestionType } from "../store/quizStore";
+import api from "./api";
 
 export interface FetchQuizOptions {
   random?: boolean;
   discipline?: string;
   language?: string;
+}
+export interface RegisterOptions {
+  nomeCompleto: string;
+  email: string;
+  senha: string;
 }
 
 export async function fetchQuizQuestions(
@@ -28,22 +34,22 @@ export async function fetchQuizQuestions(
   const apiUrl = `https://api.quiz.saggioro.xyz/question?${queryParams.toString()}`;
   console.log("A chamar API: ", apiUrl);
 
-  const response = await fetch(apiUrl);
+  const response = await api.get(apiUrl);
 
-  if (!response.ok) {
+  if (response.status >= 400) {
     let errorData;
     try {
-      errorData = await response.json();
+      errorData = response;
     } catch (e) {
       errorData = { message: response.statusText };
     }
     throw new Error(
       `Falha ao buscar perguntas da API: ${response.status} - ${
-        errorData?.message || "Erro desconhecido"
+        errorData?.data.message || "Erro desconhecido"
       }`
     );
   }
 
-  const fetchedQuestions: QuestionType[] = await response.json();
+  const fetchedQuestions: QuestionType[] = response.data;
   return fetchedQuestions;
 }
